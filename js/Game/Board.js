@@ -10,14 +10,14 @@ var Evaluator = require("../AI/Evaluator.js");
     function Board(layout) {
         var _layout = "---------";
         function _isInt(value) {
-            return !!(!isNan(value) && typeof value == "number" && value % 1 === 0);
+            return !!(!isNaN(value) && typeof value == "number" && value % 1 === 0);
 
         }
         function _setCharAt(string, index, char) {
             if (index > string.length) {
                 return string;
             }
-            return string.substr(0, index) + char + string(index + 1);
+            return string.substr(0, index) + char + string.substr(index + 1);
         }
 
         /**
@@ -27,7 +27,7 @@ var Evaluator = require("../AI/Evaluator.js");
          * @return {boolean}
          */
         function SetSquare(player, row, column) {
-            if (typeof player != "object" || typeof player.getPlayer() != "function") {
+            if (typeof player != "object" || typeof player.getPlayer != "function") {
                 throw new Error("Invalid player");
             }
             if (!_isInt(row) || !_isInt(column) || row < 0 || row > 2 || column < 0 || column > 2) {
@@ -61,6 +61,9 @@ var Evaluator = require("../AI/Evaluator.js");
         }
 
         if (layout != undefined) {
+            if (typeof layout != "string") {
+                throw new Error("Invalid type for layout");
+            }
             if (Evaluator.isValid(layout)) {
                 _layout = layout;
             }

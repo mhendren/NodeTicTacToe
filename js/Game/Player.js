@@ -23,7 +23,7 @@
          * @param value
          */
         function setPlayer(value) {
-            if (typeof value == "string" && (value == "X" || value == "O")) {
+            if (typeof value == "string" && ["X", "O"].indexOf(value) != -1) {
                 _player = value;
             } else {
                 throw new Error("Invalid player");
@@ -43,7 +43,7 @@
          * @param value
          */
         function setPlayerType(value) {
-            if (typeof value == "string" && (value == "human" || value == "computer")) {
+            if (typeof value == "string" && ["human", "computer"].indexOf(value) != -1) {
                 _playerType = value;
             } else {
                 throw new Error("Invalid player type");
