@@ -7,7 +7,7 @@
             var winner = {
                 player: board.charAt(posSet[0]),
                 winAt: [posSet[0], posSet[1], posSet[2]]
-            }
+            };
             returnWinners.push(winner);
         }
         return returnWinners;
@@ -38,24 +38,29 @@
         return returnWinners;
     }
 
-    function winner(board) {
+    /**
+     * This will determine the set of winners on a layout layout (no validation)
+     * @param layout
+     * @returns {Array}
+     */
+    function winner(layout) {
         var winners = [];
-        winners = _winnerByRow(board, winners);
-        winners = _winnerByColumn(board, winners);
-        winners = _winnerByDiagonal(board, winners);
+        winners = _winnerByRow(layout, winners);
+        winners = _winnerByColumn(layout, winners);
+        winners = _winnerByDiagonal(layout, winners);
         return winners;
     }
     exports.winner = winner;
 
-    function _isValidSize(board) {
-        return board.length == _boardSize;
+    function _isValidSize(layout) {
+        return layout.length == _boardSize;
 
     }
 
-    function _getBoardCounts(board) {
+    function _getBoardCounts(layout) {
         var counts = {X: 0, O: 0};
-        for (var i = 0; i < board.length; i++) {
-            var square = board.charAt(i);
+        for (var i = 0; i < layout.length; i++) {
+            var square = layout.charAt(i);
             if (square in counts) {
                 counts[square]++;
             } else {
@@ -75,14 +80,11 @@
     }
 
     function _isValidBalance(counts) {
-        if (counts.X != counts.O && counts.X != (counts.O + 1)) {
-            return false;
-        }
-        return true;
+        return !(counts.X != counts.O && counts.X != (counts.O + 1));
     }
 
-    function _isValidWinners(board) {
-        var winners = winner(board);
+    function _isValidWinners(layout) {
+        var winners = winner(layout);
         if (winners.length > 1) {
             var knownWinner = winners[0].player;
             for(var i = 1; i < winners.length; i++) {
@@ -94,27 +96,37 @@
         return true;
     }
 
-    function isValid(board) {
-        if (!_isValidSize(board)) {
+    /**
+     * Determine if the layout is valid
+     * @param layout
+     * @returns {boolean}
+     */
+    function isValid(layout) {
+        if (!_isValidSize(layout)) {
             throw new Error("Board size is not exactly " + _boardSize + " squares");
         }
-        var counts = _getBoardCounts(board);
+        var counts = _getBoardCounts(layout);
         if (!_isValidCharactersOnBoard(counts)) {
             throw new Error("Invalid square in board");
         }
         if (!_isValidBalance(counts)) {
             throw new Error("Board is off balance");
         }
-        if (!_isValidWinners(board)) {
+        if (!_isValidWinners(layout)) {
             throw new Error("Board contains more than one winner");
         }
         return true;
     }
     exports.isValid = isValid;
 
-    function isComplete(board) {
+    /**
+     * Determine if all squares in the layout are filled in
+     * @param layout
+     * @returns {boolean}
+     */
+    function isComplete(layout) {
         for(var i = 0; i < _boardSize; i++) {
-            if (board.charAt(i) != 'X' && board.charAt(i) != 'O') {
+            if (layout.charAt(i) != 'X' && layout.charAt(i) != 'O') {
                 return false;
             }
         }
@@ -122,11 +134,16 @@
     }
     exports.isComplete = isComplete;
 
-    function isTie(board) {
-        if (!isComplete(board)) {
+    /**
+     * Determine if the layout is a tie game
+     * @param layout
+     * @returns {boolean}
+     */
+    function isTie(layout) {
+        if (!isComplete(layout)) {
             return false; // could still be a logical tie, but the game isn't officially over
         }
-        var winners = winner(board);
+        var winners = winner(layout);
         return winners.length == 0;
 
     }

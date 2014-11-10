@@ -9,7 +9,7 @@ describe("New Board", function() {
     it("should throw an error if the passed in board is an invalid type");
 });
 
-describe("Player Move", function() {
+describe("Player Set Square", function() {
     it("should have a board with an X in the designated location (0,0)");
     it("should add an O at the designated location (1, 1)");
     it("should not allow an X to be placed at the designated location (1, 1)");
@@ -31,4 +31,10 @@ describe("Get square", function() {
     it("should throw an error if the column is out of range < 0");
     it("should throw an error if the row is an invalid type");
     it("should throw an error if the column is an invalid type");
+});
+
+describe("Get Layout", function() {
+    it("should return the empty board");
+    it("should return the correct layout as was given to constructor");
+    it("should return the correct layout as updated by a SetSquare");
 });
