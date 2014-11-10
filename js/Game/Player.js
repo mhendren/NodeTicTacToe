@@ -18,15 +18,19 @@
             return _playerType;
         }
         function setPlayerType(value) {
-            if (typeof value == "string" && value == "human" && value == "computer") {
+            if (typeof value == "string" && (value == "human" || value == "computer")) {
                 _playerType = value;
             } else {
                 throw new Error("Invalid player type");
             }
         }
 
-        setPlayer(player);
-        setPlayerType(playerType);
+        if (player !== undefined) {
+            setPlayer(player);
+        }
+        if (playerType !== undefined) {
+            setPlayerType(playerType);
+        }
 
         return {
             getPlayer: getPlayer,
