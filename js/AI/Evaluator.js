@@ -1,4 +1,4 @@
-(function (exports) {
+module.exports = function() {
     var _boardSize = 9;
 
     function _winnerBySet(board, winners, posSet) {
@@ -50,7 +50,6 @@
         winners = _winnerByDiagonal(layout, winners);
         return winners;
     }
-    exports.winner = winner;
 
     function _isValidSize(layout) {
         return layout.length == _boardSize;
@@ -87,7 +86,7 @@
         var winners = winner(layout);
         if (winners.length > 1) {
             var knownWinner = winners[0].player;
-            for(var i = 1; i < winners.length; i++) {
+            for (var i = 1; i < winners.length; i++) {
                 if (winners[i].player != knownWinner) {
                     return false;
                 }
@@ -117,7 +116,6 @@
         }
         return true;
     }
-    exports.isValid = isValid;
 
     /**
      * Determine if all squares in the layout are filled in
@@ -125,14 +123,13 @@
      * @returns {boolean}
      */
     function isComplete(layout) {
-        for(var i = 0; i < _boardSize; i++) {
+        for (var i = 0; i < _boardSize; i++) {
             if (layout.charAt(i) != 'X' && layout.charAt(i) != 'O') {
                 return false;
             }
         }
         return true;
     }
-    exports.isComplete = isComplete;
 
     /**
      * Determine if the layout is a tie game
@@ -147,5 +144,11 @@
         return winners.length == 0;
 
     }
-    exports.isTie = isTie;
-})(this);
+
+    return {
+        "winner": winner,
+        "isValid": isValid,
+        "isComplete": isComplete,
+        "isTie": isTie
+    };
+};

@@ -1,7 +1,12 @@
-var evaluator = require("../../js/AI/Evaluator.js");
+var Evaluator = require("../../js/AI/Evaluator.js");
 
 var chai = require("chai");
 var expect = chai.expect;
+
+var evaluator = null;
+before(function() {
+    evaluator = new Evaluator();
+});
 
 describe("invalid board", function() {
     it("should have an invalid board if there are fewer than 9 squares", function(done) {
