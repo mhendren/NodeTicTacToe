@@ -1,4 +1,4 @@
-var Evaluator = require("../../js/AI/Evaluator.js");
+var Evaluator = require("../../js/Game/Evaluator.js");
 
 var evaluator = null;
 before(function() {

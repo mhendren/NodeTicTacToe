@@ -1,11 +1,11 @@
 module.exports = function() {
     var _boardSize = 9;
 
-    function _winnerBySet(board, winners, posSet) {
+    function _winnerBySet(layout, winners, posSet) {
         var returnWinners = winners;
-        if (board.charAt(posSet[0]) == board.charAt(posSet[1]) && board.charAt(posSet[0]) == board.charAt(posSet[2]) && ['X', 'O'].indexOf(board.charAt(posSet[0])) != -1) {
+        if (layout.charAt(posSet[0]) == layout.charAt(posSet[1]) && layout.charAt(posSet[0]) == layout.charAt(posSet[2]) && ['X', 'O'].indexOf(layout.charAt(posSet[0])) != -1) {
             var winner = {
-                player: board.charAt(posSet[0]),
+                player: layout.charAt(posSet[0]),
                 winAt: [posSet[0], posSet[1], posSet[2]]
             };
             returnWinners.push(winner);
@@ -13,28 +13,28 @@ module.exports = function() {
         return returnWinners;
     }
 
-    function _winnerByRow(board, winners) {
+    function _winnerByRow(layout, winners) {
         var returnWinners = winners;
         for (var i = 0; i < 3; i++) {
             var posSet = [i * 3, i * 3 + 1, i * 3 + 2];
-            returnWinners = _winnerBySet(board, returnWinners, posSet);
+            returnWinners = _winnerBySet(layout, returnWinners, posSet);
         }
         return returnWinners;
     }
 
-    function _winnerByColumn(board, winners) {
+    function _winnerByColumn(layout, winners) {
         var returnWinners = winners;
         for (var i = 0; i < 3; i++) {
             var posSet = [i, 3 + i, 6 + i];
-            returnWinners = _winnerBySet(board, returnWinners, posSet);
+            returnWinners = _winnerBySet(layout, returnWinners, posSet);
         }
         return returnWinners;
     }
 
-    function _winnerByDiagonal(board, winners) {
+    function _winnerByDiagonal(layout, winners) {
         var returnWinners = winners;
-        returnWinners = _winnerBySet(board, returnWinners, [0, 4, 8]);
-        returnWinners = _winnerBySet(board, returnWinners, [2, 4, 6]);
+        returnWinners = _winnerBySet(layout, returnWinners, [0, 4, 8]);
+        returnWinners = _winnerBySet(layout, returnWinners, [2, 4, 6]);
         return returnWinners;
     }
 

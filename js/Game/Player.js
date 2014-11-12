@@ -49,6 +49,13 @@ module.exports = function Player(player, playerType) {
         }
     }
 
+    function toJSON() {
+        return {
+            "player": getPlayer(),
+            "playerType": getPlayerType()
+        }
+    }
+
     if (player !== undefined) {
         setPlayer(player);
     }
@@ -57,9 +64,10 @@ module.exports = function Player(player, playerType) {
     }
 
     return {
-        getPlayer: getPlayer,
-        setPlayer: setPlayer,
-        getPlayerType: getPlayerType,
-        setPlayerType: setPlayerType
+        "getPlayer": getPlayer,
+        "setPlayer": setPlayer,
+        "getPlayerType": getPlayerType,
+        "setPlayerType": setPlayerType,
+        "toJSON": toJSON
     };
 };

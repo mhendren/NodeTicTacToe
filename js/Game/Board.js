@@ -1,4 +1,4 @@
-var Evaluator = require("../AI/Evaluator.js");
+var Evaluator = require("./Evaluator.js");
 
 /**
  *
