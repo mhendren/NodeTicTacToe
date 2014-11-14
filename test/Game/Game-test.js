@@ -7,40 +7,32 @@ describe("New Game", function() {
     beforeEach(function() {
         game = new Game();
     });
-    it("should exist", function(done) {
+    it("should exist", function() {
         game.should.exist;
-        done();
     });
-    it("should make a default layout", function(done) {
+    it("should make a default layout", function() {
         game.toJSON().layout.should.equal("---------");
-        done();
     });
-    it("should have unset player types", function(done) {
+    it("should have unset player types", function() {
         should.not.exist(game.toJSON().X);
         should.not.exist(game.toJSON().O);
-        done();
     });
-    it("should have current player of 'X", function(done) {
+    it("should have current player of 'X", function() {
         game.toJSON().currentPlayer.should.equal("X");
-        done();
     });
-    it("should not have a row or column set", function(done) {
+    it("should not have a row or column set", function() {
         should.not.exist(game.toJSON().row);
         should.not.exist(game.toJSON().column);
-        done();
     });
-    it("should have a state of inprogress", function(done) {
+    it("should have a state of inprogress", function() {
         game.toJSON().state.should.equal("inprogress");
-        done();
     });
-    it("should not have a winner or winAt set", function(done) {
+    it("should not have a winner or winAt set", function() {
         should.not.exist(game.toJSON().winner);
         should.not.exist(game.toJSON().winAt);
-        done();
     });
-    it("should not have an errorMessage set", function(done) {
+    it("should not have an errorMessage set", function() {
         should.not.exist(game.toJSON().errorMessage);
-        done();
     });
 });
 
@@ -50,23 +42,20 @@ describe("PlaceMark" , function() {
         game = new Game();
     });
 
-    it("should update the layout, and set the player to O", function (done) {
+    it("should update the layout, and set the player to O", function () {
         game.PlaceMark("0", "0");
         game.toJSON().layout.should.equal("X--------");
         game.toJSON().currentPlayer.should.equal("O");
-        done();
     });
-    it("should set the errorMessage if the row is out of range", function(done) {
+    it("should set the errorMessage if the row is out of range", function() {
         game.PlaceMark("3", "0");
         game.toJSON().errorMessage.should.equal("Row or Column is invalid");
-        done();
     });
-    it("should set the errorMessage if the column is out of range", function(done) {
+    it("should set the errorMessage if the column is out of range", function() {
         game.PlaceMark("0", "3");
         game.toJSON().errorMessage.should.equal("Row or Column is invalid");
-        done();
     });
-    it("should have state='win', winner, and winAt if the mark is a winner", function(done) {
+    it("should have state='win', winner, and winAt if the mark is a winner", function() {
         game.PlaceMark("0", "0");
         game.PlaceMark("1", "0");
         game.PlaceMark("0", "1");
@@ -76,9 +65,8 @@ describe("PlaceMark" , function() {
         game.toJSON().state.should.equal("win");
         game.toJSON().winner.should.equal("X");
         game.toJSON().winAt.should.deep.equal([0, 1, 2]);
-        done();
     });
-    it("should identify a tie game if the mark is a tie maker", function(done) {
+    it("should identify a tie game if the mark is a tie maker", function() {
         game.PlaceMark("0", "0"); //X-- --- ---
         game.PlaceMark("1", "1"); //X-- -O- ---
         game.PlaceMark("2", "2"); //X-- -O- --X
@@ -90,7 +78,6 @@ describe("PlaceMark" , function() {
         game.PlaceMark("0", "1"); //XXO OOX XOX
         game.toJSON().layout.should.equal("XXOOOXXOX");
         game.toJSON().state.should.equal("tie");
-        done();
     })
 });
 
@@ -100,34 +87,28 @@ describe("ChangePlayerType", function() {
         game = new Game();
     });
 
-    it("should set the player type for X to 'human'", function(done) {
+    it("should set the player type for X to 'human'", function() {
         game.ChangePlayerType("X", "human");
         game.toJSON().X.should.equal("human");
-        done();
     });
-    it("should set the player type for O to 'human'", function(done) {
+    it("should set the player type for O to 'human'", function() {
         game.ChangePlayerType("O", "human");
         game.toJSON().O.should.equal("human");
-        done();
     });
-    it("should set the player type for X to 'computer'", function(done) {
+    it("should set the player type for X to 'computer'", function() {
         game.ChangePlayerType("X", "computer");
         game.toJSON().X.should.equal("computer");
-        done();
     });
-    it("should set the player type for O to 'computer'", function(done) {
+    it("should set the player type for O to 'computer'", function() {
         game.ChangePlayerType("O", "computer");
         game.toJSON().O.should.equal("computer");
-        done();
     });
-    it("should set the errorMessage if the player is not X or O", function(done) {
+    it("should set the errorMessage if the player is not X or O", function() {
         game.ChangePlayerType("q", "human");
         game.toJSON().errorMessage.should.equal("Invalid player");
-        done();
     });
-    it("should set the errorMessage if the playerType is not 'human' or 'computer'", function(done) {
+    it("should set the errorMessage if the playerType is not 'human' or 'computer'", function() {
         game.ChangePlayerType("X", "bad");
         game.toJSON().errorMessage.should.equal("Invalid player type");
-        done();
     })
 });
