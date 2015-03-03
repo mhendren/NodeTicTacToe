@@ -30,7 +30,8 @@ describe("Basic POST/PUT/GET/DELETE functions", function() {
         it("should set the X player to human", function (done) {
             request(url)
                 .put("/game")
-                .query({"X": "human"})
+                .set({"content-type": "application/json"})
+                .send({"X": "human"})
                 .expect(200)
                 .expect("Content-Type", /json/)
                 .end(function (err, res) {
@@ -44,7 +45,8 @@ describe("Basic POST/PUT/GET/DELETE functions", function() {
         it("should set the O player to computer", function (done) {
             request(url)
                 .put("/game")
-                .query({"O": "computer"})
+                .set({"content-type": "application/json"})
+                .send({"O": "computer"})
                 .expect(200)
                 .expect("Content-Type", /json/)
                 .end(function (err, res) {
@@ -58,7 +60,8 @@ describe("Basic POST/PUT/GET/DELETE functions", function() {
         it("should set the position 0,0 to X, currentPlayer to O", function (done) {
             request(url)
                 .put("/game")
-                .query({"row": "0", "column": "0"})
+                .set({"content-type": "application/json"})
+                .send({"row": "0", "column": "0"})
                 .expect(200)
                 .expect("Content-Type", /json/)
                 .end(function (err, res) {
@@ -73,7 +76,8 @@ describe("Basic POST/PUT/GET/DELETE functions", function() {
         it("should set the errorMessage to 'Invalid player type' on incorrect type", function (done) {
             request(url)
                 .put("/game")
-                .query({"X": "cat"})
+                .set({"content-type": "application/json"})
+                .send({"X": "cat"})
                 .expect(200)
                 .expect("Content-Type", /json/)
                 .end(function (err, res) {
@@ -87,7 +91,8 @@ describe("Basic POST/PUT/GET/DELETE functions", function() {
         it("should set the errorMessage to 'Row or Column is invalid' on invalid row", function (done) {
             request(url)
                 .put("/game")
-                .query({"row": "3", "column": 0})
+                .set({"content-type": "application/json"})
+                .send({"row": "3", "column": 0})
                 .expect(200)
                 .expect("Content-Type", /json/)
                 .end(function (err, res) {
@@ -101,7 +106,8 @@ describe("Basic POST/PUT/GET/DELETE functions", function() {
         it("should set the errorMessage to 'Row or Column is invalid' on invalid column", function (done) {
             request(url)
                 .put("/game")
-                .query({"row": 0, "column": "n"})
+                .set({"content-type": "application/json"})
+                .send({"row": 0, "column": "n"})
                 .expect(200)
                 .expect("Content-Type", /json/)
                 .end(function (err, res) {
@@ -162,16 +168,16 @@ describe("Basic POST/PUT/GET/DELETE functions", function() {
 describe("Playing a game", function() {
     describe("tie game", function() {
         it("should reset the game", function(done) {request(url).post("/game").end(function() {done();});});
-        it("should set playets to human", function(done) {request(url).put("/game").query({"X": "human", "O": "human"}).end(function(){done();});});
-        it("should set 0,0", function(done) {request(url).put("/game").query({"row": "0", "column": "0"}).end(function(){done();});}); // X-- --- ---
-        it("should set 1,1", function(done) {request(url).put("/game").query({"row": "1", "column": "1"}).end(function(){done();});}); // X-- -O- ---
-        it("should set 2,0", function(done) {request(url).put("/game").query({"row": "2", "column": "0"}).end(function(){done();});}); // X-- -O- X--
-        it("should set 1,0" ,function(done) {request(url).put("/game").query({"row": "1", "column": "0"}).end(function(){done();});}); // X-- OO- X--
-        it("should set 1,2", function(done) {request(url).put("/game").query({"row": "1", "column": "2"}).end(function(){done();});}); // X-- OOX X--
-        it("should set 0,1", function(done) {request(url).put("/game").query({"row": "0", "column": "1"}).end(function(){done();});}); // XO- OOX X--
-        it("should set 2,1", function(done) {request(url).put("/game").query({"row": "2", "column": "1"}).end(function(){done();});}); // XO- OOX XX-
-        it("should set 2,2", function(done) {request(url).put("/game").query({"row": "2", "column": "2"}).end(function(){done();});}); // XO- OOX XXO
-        it("should set 0,2", function(done) {request(url).put("/game").query({"row": "0", "column": "2"}).end(function(){done();});}); // XOX OOX XXO
+        it("should set playets to human", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"X": "human", "O": "human"}).end(function(){done();});});
+        it("should set 0,0", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row": "0", "column": "0"}).end(function(){done();});}); // X-- --- ---
+        it("should set 1,1", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row": "1", "column": "1"}).end(function(){done();});}); // X-- -O- ---
+        it("should set 2,0", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row": "2", "column": "0"}).end(function(){done();});}); // X-- -O- X--
+        it("should set 1,0" ,function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row": "1", "column": "0"}).end(function(){done();});}); // X-- OO- X--
+        it("should set 1,2", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row": "1", "column": "2"}).end(function(){done();});}); // X-- OOX X--
+        it("should set 0,1", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row": "0", "column": "1"}).end(function(){done();});}); // XO- OOX X--
+        it("should set 2,1", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row": "2", "column": "1"}).end(function(){done();});}); // XO- OOX XX-
+        it("should set 2,2", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row": "2", "column": "2"}).end(function(){done();});}); // XO- OOX XXO
+        it("should set 0,2", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row": "0", "column": "2"}).end(function(){done();});}); // XOX OOX XXO
         it("should have state of 'tie'", function(done) {
             request(url)
                 .get("/game")
@@ -189,12 +195,12 @@ describe("Playing a game", function() {
     });
     describe("X wins row 0", function() {
         it("should reset the game", function(done) {request(url).post("/game").end(function() {done();});});
-        it("should set playets to human", function(done) {request(url).put("/game").query({"X": "human", "O": "human"}).end(function(){done();});});
-        it("should set 0,0", function(done) {request(url).put("/game").query({"row":"0", "column":"0"}).end(function(){done();});});
-        it("should set 1,0", function(done) {request(url).put("/game").query({"row":"1", "column":"0"}).end(function(){done();});});
-        it("should set 0,1", function(done) {request(url).put("/game").query({"row":"0", "column":"1"}).end(function(){done();});});
-        it("should set 1,1", function(done) {request(url).put("/game").query({"row":"1", "column":"1"}).end(function(){done();});});
-        it("should set 0,2", function(done) {request(url).put("/game").query({"row":"0", "column":"2"}).end(function(){done();});});
+        it("should set playets to human", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"X": "human", "O": "human"}).end(function(){done();});});
+        it("should set 0,0", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"0", "column":"0"}).end(function(){done();});});
+        it("should set 1,0", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"1", "column":"0"}).end(function(){done();});});
+        it("should set 0,1", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"0", "column":"1"}).end(function(){done();});});
+        it("should set 1,1", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"1", "column":"1"}).end(function(){done();});});
+        it("should set 0,2", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"0", "column":"2"}).end(function(){done();});});
         it("should have a state of 'win' winner of 'X' and winAt of [0, 2, 3]", function(done) {
             request(url)
                 .get("/game")
@@ -214,13 +220,13 @@ describe("Playing a game", function() {
     });
     describe("O wins column 2", function() {
         it("should reset the game", function(done) {request(url).post("/game").end(function() {done();});});
-        it("should set playets to human", function(done) {request(url).put("/game").query({"X": "human", "O": "human"}).end(function(){done();});});
-        it("should set 0,0", function(done) {request(url).put("/game").query({"row":"0", "column": "0"}).end(function(){done();});});
-        it("should set 1,2", function(done) {request(url).put("/game").query({"row":"1", "column": "2"}).end(function(){done();});});
-        it("should set 0,1", function(done) {request(url).put("/game").query({"row":"0", "column": "1"}).end(function(){done();});});
-        it("should set 0,2", function(done) {request(url).put("/game").query({"row":"0", "column": "2"}).end(function(){done();});});
-        it("should set 1,0", function(done) {request(url).put("/game").query({"row":"1", "column": "0"}).end(function(){done();});});
-        it("should set 2,2", function(done) {request(url).put("/game").query({"row":"2", "column": "2"}).end(function(){done();});});
+        it("should set playets to human", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"X": "human", "O": "human"}).end(function(){done();});});
+        it("should set 0,0", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"0", "column": "0"}).end(function(){done();});});
+        it("should set 1,2", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"1", "column": "2"}).end(function(){done();});});
+        it("should set 0,1", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"0", "column": "1"}).end(function(){done();});});
+        it("should set 0,2", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"0", "column": "2"}).end(function(){done();});});
+        it("should set 1,0", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"1", "column": "0"}).end(function(){done();});});
+        it("should set 2,2", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"2", "column": "2"}).end(function(){done();});});
         it("should have a state of 'win', winner of 'O', and winAt of [2, 5, 8]", function(done) {
             request(url)
                 .get("/game")
@@ -240,12 +246,12 @@ describe("Playing a game", function() {
     });
     describe("X wins top left to bottom right", function() {
         it("should reset the game", function(done) {request(url).post("/game").end(function() {done();});});
-        it("should set playets to human", function(done) {request(url).put("/game").query({"X": "human", "O": "human"}).end(function(){done();});});
-        it("should set 0,0", function(done) {request(url).put("/game").query({"row":"0", "column":"0"}).end(function(){done();});});
-        it("should set 1,0", function(done) {request(url).put("/game").query({"row":"1", "column":"0"}).end(function(){done();});});
-        it("should set 1,1", function(done) {request(url).put("/game").query({"row":"1", "column":"1"}).end(function(){done();});});
-        it("should set 2,1", function(done) {request(url).put("/game").query({"row":"2", "column":"1"}).end(function(){done();});});
-        it("should set 2,2", function(done) {request(url).put("/game").query({"row":"2", "column":"2"}).end(function(){done();});});
+        it("should set playets to human", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"X": "human", "O": "human"}).end(function(){done();});});
+        it("should set 0,0", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"0", "column":"0"}).end(function(){done();});});
+        it("should set 1,0", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"1", "column":"0"}).end(function(){done();});});
+        it("should set 1,1", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"1", "column":"1"}).end(function(){done();});});
+        it("should set 2,1", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"2", "column":"1"}).end(function(){done();});});
+        it("should set 2,2", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"2", "column":"2"}).end(function(){done();});});
         it("should have a state of 'win', winner of 'X', and winAt of [0, 4, 8]", function(done) {
             request(url)
                 .get("/game")

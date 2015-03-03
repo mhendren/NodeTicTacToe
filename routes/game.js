@@ -23,16 +23,16 @@ router.route('/')
     })
     /* PUT change some game state */
     .put(function(req, res) {
-        var X = typeof req.query.X !== "undefined" ? req.query.X : game.toJSON().X;
-        var O = typeof req.query.O !== "undefined" ? req.query.O : game.toJSON().O;
+        var X = typeof req.body.X !== "undefined" ? req.body.X : game.toJSON().X;
+        var O = typeof req.body.O !== "undefined" ? req.body.O : game.toJSON().O;
         if (X != game.toJSON().X) {
             game.ChangePlayerType("X", X);
         }
         if (O != game.toJSON().O) {
             game.ChangePlayerType("O", O);
         }
-        var row = typeof req.query.row !== "undefined" ? req.query.row : null;
-        var column = typeof req.query.column !== "undefined" ? req.query.column : null;
+        var row = typeof req.body.row !== "undefined" ? req.body.row : null;
+        var column = typeof req.body.column !== "undefined" ? req.body.column : null;
         if (row != null && column != null) {
             game.PlaceMark(row, column);
         }
