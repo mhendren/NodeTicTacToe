@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/app.css"/>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body ng-controller="ApplicationCtrl">
+<div class="container">
+    <form name="newgame">
+        <input class="btn" name="newgame" type="submit" value="New Game" ng-click="init()"/>
+        <label>X</label>
+        <select ng-model="playerX" ng-change="updatePlayer('X')" >
+            <option>Human</option>
+            <option>Computer</option>
+        </select>
+        <label>O</label>
+        <select ng-model="playerO" ng-change="updatePlayer('O')">
+            <option>Human</option>
+            <option>Computer</option>
+        </select>
+    </form>
+    <div>Current Player: {{currentPlayer}}</div>
+    <form class="board">
+        <div ng-click="setValue(0, 0)">{{val[0]}}</div>
+        <div ng-click="setValue(0, 1)">{{val[1]}}</div>
+        <div ng-click="setValue(0, 2)">{{val[2]}}</div>
+        <br />
+        <div ng-click="setValue(1, 0)">{{val[3]}}</div>
+        <div ng-click="setValue(1, 1)">{{val[4]}}</div>
+        <div ng-click="setValue(1, 2)">{{val[5]}}</div>
+        <br />
+        <div ng-click="setValue(2, 0)">{{val[6]}}</div>
+        <div ng-click="setValue(2, 1)">{{val[7]}}</div>
+        <div ng-click="setValue(2, 2)">{{val[8]}}</div>
+        <br />
+    </form>
+    <div>{{message}}</div>
+    <div>State: {{state}}</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
