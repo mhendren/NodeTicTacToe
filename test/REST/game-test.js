@@ -246,7 +246,7 @@ describe("Playing a game", function() {
     });
     describe("X wins top left to bottom right", function() {
         it("should reset the game", function(done) {request(url).post("/game").end(function() {done();});});
-        it("should set playets to human", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"X": "human", "O": "human"}).end(function(){done();});});
+        it("should set players to human", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"X": "human", "O": "human"}).end(function(){done();});});
         it("should set 0,0", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"0", "column":"0"}).end(function(){done();});});
         it("should set 1,0", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"1", "column":"0"}).end(function(){done();});});
         it("should set 1,1", function(done) {request(url).put("/game").set({"content-type": "application/json"}).send({"row":"1", "column":"1"}).end(function(){done();});});
