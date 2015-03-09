@@ -22,20 +22,20 @@
         </select>
     </form>
     <div>Current Player: {{currentPlayer}}</div>
-    <form class="board">
-        <div ng-click="setValue(0, 0)">{{val[0]}}</div>
-        <div ng-click="setValue(0, 1)">{{val[1]}}</div>
-        <div ng-click="setValue(0, 2)">{{val[2]}}</div>
+    <div class="board">
+        <div ng-style="styleval[0]" ng-click="setValue(0, 0)">{{val[0]}}</div>
+        <div ng-style="styleval[1]" ng-click="setValue(0, 1)">{{val[1]}}</div>
+        <div ng-style="styleval[2]" ng-click="setValue(0, 2)">{{val[2]}}</div>
         <br />
-        <div ng-click="setValue(1, 0)">{{val[3]}}</div>
-        <div ng-click="setValue(1, 1)">{{val[4]}}</div>
-        <div ng-click="setValue(1, 2)">{{val[5]}}</div>
+        <div ng-style="styleval[3]" ng-click="setValue(1, 0)">{{val[3]}}</div>
+        <div ng-style="styleval[4]" ng-click="setValue(1, 1)">{{val[4]}}</div>
+        <div ng-style="styleval[5]" ng-click="setValue(1, 2)">{{val[5]}}</div>
         <br />
-        <div ng-click="setValue(2, 0)">{{val[6]}}</div>
-        <div ng-click="setValue(2, 1)">{{val[7]}}</div>
-        <div ng-click="setValue(2, 2)">{{val[8]}}</div>
+        <div ng-style="styleval[6]" ng-click="setValue(2, 0)">{{val[6]}}</div>
+        <div ng-style="styleval[7]" ng-click="setValue(2, 1)">{{val[7]}}</div>
+        <div ng-style="styleval[8]" ng-click="setValue(2, 2)">{{val[8]}}</div>
         <br />
-    </form>
+    </div>
     <div>{{message}}</div>
     <div>State: {{state}}</div>
 </div>
