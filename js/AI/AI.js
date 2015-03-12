@@ -57,17 +57,17 @@ module.exports = function(game) {
         return choose([0, 2, 4, 6, 8]);
     }
 
-    function generateBoards(layout, currentPlayer) {
+    function generateLayouts(layout, currentPlayer) {
         var valid = validMoves(layout);
-        var boards = {};
+        var layouts = {};
         for(var move in valid) {
             if (!valid.hasOwnProperty(move)) continue;
             var pos = valid[move];
             var board = new Board(layout);
             board.SetSquare(currentPlayer, Math.floor(pos / 3), pos % 3);
-            boards[pos] = board.getLayout();
+            layouts[pos] = board.getLayout();
         }
-        return boards;
+        return layouts;
     }
 
     function findWinner(boards) {
@@ -148,8 +148,8 @@ module.exports = function(game) {
         else if (isSecondMove(layout)) {
             return makeSecondMove(layout);
         }
-        var boards = generateBoards(layout, currentPlayer);
-        var winner = findWinner(boards);
+        var layouts = generateLayouts(layout, currentPlayer);
+        var winner = findWinner(layouts);
         if (winner != null) {
             return winner;
         }
@@ -172,6 +172,22 @@ module.exports = function(game) {
     }
 
     return {
+        otherPlayer: otherPlayer,
+        isEmpty: isEmpty,
+        choose: choose,
+        isSecondMove: isSecondMove,
+        makeFirstMove: makeFirstMove,
+        validMoves: validMoves,
+        contains: contains,
+        makeSecondMove: makeSecondMove,
+        generateLayouts: generateLayouts,
+        findWinner: findWinner,
+        mustBlock: mustBlock,
+        multiBlockMoves: multiBlockMoves,
+        listNonMultiBlockMoves: listNonMultiBlockMoves,
+        selectBestMove: selectBestMove,
+
+
         play: function(currentPlayer) {
             return play(currentPlayer);
         }
