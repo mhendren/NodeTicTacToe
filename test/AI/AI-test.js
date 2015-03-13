@@ -11,6 +11,17 @@ describe ('AI', function() {
     beforeEach(function () {
         ai = new AI(new Game())
     });
+    describe('rowcol', function() {
+        it('should find 0, 0 for pos 0', function() { expect(ai.rowcol(0)).to.deep.equal([0, 0]); });
+        it('should find 0, 1 for pos 1', function() { expect(ai.rowcol(1)).to.deep.equal([0, 1]); });
+        it('should find 0, 2 for pos 2', function() { expect(ai.rowcol(2)).to.deep.equal([0, 2]); });
+        it('should find 1, 0 for pos 3', function() { expect(ai.rowcol(3)).to.deep.equal([1, 0]); });
+        it('should find 1, 1 for pos 4', function() { expect(ai.rowcol(4)).to.deep.equal([1, 1]); });
+        it('should find 1, 2 for pos 5', function() { expect(ai.rowcol(5)).to.deep.equal([1, 2]); });
+        it('should find 2, 0 for pos 6', function() { expect(ai.rowcol(6)).to.deep.equal([2, 0]); });
+        it('should find 2, 1 for pos 7', function() { expect(ai.rowcol(7)).to.deep.equal([2, 1]); });
+        it('should find 2, 2 for pos 8', function() { expect(ai.rowcol(8)).to.deep.equal([2, 2]); });
+    });
     describe('otherPlayer', function() {
         it ('should find the otherPlayer for O to be X', function() {
             expect((ai.otherPlayer(new Player('O', 'human'))).getPlayer()).to.equal('X');
@@ -145,4 +156,51 @@ describe ('AI', function() {
             expect(ai.contains(layouts, 'XOXOXO-XO')).to.be.true;
         });
     });
+    describe('findWinner', function() {
+        it('should find a winner at 2 for XXXOO---- for X', function() {
+            var layouts = {2: 'XXXOO----', 5: 'XX-OOX---', 6: 'XX-OO-X--', 7: 'XX-OO--X-', 8: 'XX-OO---X'};
+            expect(ai.findWinner(layouts)).to.equal("2");
+        });
+        it('should find a winner (tie) for XOXOOXX-O at 8', function() {
+            var layouts = {8: 'XOXOOXXXO'};
+            expect(ai.findWinner(layouts)).to.equal("8");
+        });
+        it('should not find a winner for XO-OX-OXO', function() {
+            var layouts = {2: 'XOXOX-OXO', 5: 'XO-OXXOXO'};
+            expect(ai.findWinner(layouts)).to.be.null;
+        })
+    });
+    describe('mustBlock', function() {
+        it('should return [1] for X-X-O---- for player O', function() {
+            expect(ai.mustBlock('X-X-O----', new Player('O', 'human'))).to.deep.equal([1]);
+        });
+        it('should return [1, 5] for X-X-O-O-X for player O', function() {
+            expect(ai.mustBlock('X-X-O-O-X', new Player('O', 'human'))).to.deep.equal([1, 5]);
+        });
+        it('should return no must blocks for X---O---X for player O' , function () {
+            expect(ai.mustBlock('X---O---X', new Player('O', 'human'))).to.be.null;
+        });
+    });
+    describe('multiBlockMoves', function() {
+        it('should return [2, 6] for X---O---X for player O', function() {
+            expect(ai.multiBlockMoves('X---O---X', new Player('O', 'human'))).to.deep.equal([2, 6]);
+        });
+        it('should return [1, 2] for X---O--X- for player O', function() {
+            expect(ai.multiBlockMoves('X---O--X-', new Player('O', 'human'))).to.deep.equal([1, 2]);
+        });
+        it('should not have multiBlockMoves available for XXO-O-XOX', function() {
+            expect(ai.multiBlockMoves('XXO-O-XOX', new Player('O', 'human'))).to.be.null;
+        });
+    });
+    describe('listNonMultiBlockMoves', function() {
+        it('should return [1, 3, 5, 7] for X---O---X for player O', function() {
+            expect(ai.listNonMultiBlockMoves('X---O---X', new Player('O', 'human'))).to.deep.equal([1, 3, 5, 7]);
+        });
+        it('should return [3, 5, 6, 8] for X---O--X- for player O', function() {
+            expect(ai.listNonMultiBlockMoves('X---O--X-', new Player('O', 'human'))).to.deep.equal([3, 5, 6, 8]);
+        });
+        it('should return [3, 5] for XXO-O-XOX for player O', function() {
+            expect(ai.listNonMultiBlockMoves('XXO-O-XOX', new Player('O', 'human'))).to.deep.equal([3, 5]);
+        });
+    })
 });

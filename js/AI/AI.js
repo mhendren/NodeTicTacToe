@@ -7,6 +7,9 @@ var Evaluator = require('../Game/Evaluator');
 var Player = require('../Game/Player');
 
 module.exports = function(game) {
+    function rowcol(pos) {
+        return [Math.floor(pos / 3), pos % 3];
+    }
     function otherPlayer(currentPlayer) {
         if (currentPlayer.getPlayer() === 'X') return new Player('O', 'human');
         return new Player('X', 'human');
@@ -70,14 +73,14 @@ module.exports = function(game) {
         return layouts;
     }
 
-    function findWinner(boards) {
+    function findWinner(layouts) {
         var evaluator = new Evaluator();
-        for(var move in boards) {
-            if (!boards.hasOwnProperty(move)) continue;
-            if (evaluator.isTie(boards[move])) {
+        for(var move in layouts) {
+            if (!layouts.hasOwnProperty(move)) continue;
+            if (evaluator.isTie(layouts[move])) {
                 return move;
             }
-            var winners = evaluator.winner(boards[move]);
+            var winners = evaluator.winner(layouts[move]);
             if (winners.length > 0) {
                 return move;
             }
@@ -87,45 +90,48 @@ module.exports = function(game) {
 
     function mustBlock(layout, currentPlayer) {
         var valid = validMoves(layout);
-        for(var move in valid) {
+        var blocks = [];
+        for (var move in valid) {
             if (!valid.hasOwnProperty(move)) continue;
             var pos = valid[move];
+            var rc = rowcol(pos);
             var board = new Board(layout);
-            board.SetSquare(otherPlayer(currentPlayer), Math.floor(pos / 3), pos % 3);
+            board.SetSquare(otherPlayer(currentPlayer), rc[0], rc[1]);
             var evaluator = new Evaluator();
             var winner = evaluator.winner(board.getLayout());
             if (winner.length > 0) {
-                return pos;
+                blocks.push(pos);
             }
         }
-        return null;
+        return blocks.length == 0 ? null : blocks;
     }
+
 
     function multiBlockMoves(layout, currentPlayer) {
         var valid = validMoves(layout);
         var multiBlocks = [];
         for (var move in valid) {
-            if(!valid.hasOwnProperty(move)) continue;
+            if (!valid.hasOwnProperty(move)) continue;
             var pos = valid[move];
+            var rc = rowcol(pos);
             var board = new Board(layout);
-            board.SetSquare(currentPlayer, Math.floor(pos / 3), pos % 3);
+            board.SetSquare(currentPlayer, rc[0], rc[1]);
             var oppValid = validMoves(board.getLayout());
-            var winCount = 0;
             for(var oppMove in oppValid) {
                 if (!oppValid.hasOwnProperty(oppMove)) continue;
                 var oppPos = oppValid[oppMove];
+                var oppRC = rowcol(oppPos);
                 var oppBoard = new Board(board.getLayout());
-                oppBoard.SetSquare(otherPlayer(currentPlayer), Math.floor(oppPos / 3), oppPos % 3);
-                var evaluator = new Evaluator();
-                var winner = evaluator.winner(oppBoard.getLayout());
-                if (winner.length > 0)
-                    winCount++;
-            }
-            if (winCount > 1) {
-                multiBlocks.push(move);
+                oppBoard.SetSquare(otherPlayer(currentPlayer), oppRC[0], oppRC[1]);
+                var mustBlocks = mustBlock(oppBoard.getLayout(), currentPlayer);
+                if (mustBlocks && mustBlocks.length > 1) {
+                    if(!findWinner(generateLayouts(oppBoard.getLayout(), currentPlayer))) {
+                        multiBlocks.push(pos);
+                    }
+                }
             }
         }
-        return multiBlocks;
+        return multiBlocks.length == 0 ? null : multiBlocks;
     }
 
     function listNonMultiBlockMoves(layout, currentPlayer) {
@@ -134,7 +140,7 @@ module.exports = function(game) {
         var nonMultiBlocks = [];
         for (var move in valid) {
             if (!valid.hasOwnProperty(move)) continue;
-            if (multiBlocks.indexOf(valid[move]) == -1) {
+            if (!multiBlocks || multiBlocks.indexOf(valid[move]) == -1) {
                 nonMultiBlocks.push(valid[move]);
             }
         }
@@ -172,6 +178,7 @@ module.exports = function(game) {
     }
 
     return {
+        rowcol: rowcol,
         otherPlayer: otherPlayer,
         isEmpty: isEmpty,
         choose: choose,
