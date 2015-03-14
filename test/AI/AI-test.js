@@ -136,6 +136,22 @@ describe ('AI', function() {
             expect(cnt).to.equal(40000);
         });
     });
+    describe('forallMoves', function() {
+       it('should add a copy of each layout into an array', function() {
+           var data = ai.forallMoves('X--------', new Player('O', 'human'), [], function(lay, play, pos, data) {
+               return data.concat(lay);
+           });
+           expect(data.length).to.equal(8);
+           expect(data[0]).to.equal('XO-------');
+           expect(data[1]).to.equal('X-O------');
+           expect(data[2]).to.equal('X--O-----');
+           expect(data[3]).to.equal('X---O----');
+           expect(data[4]).to.equal('X----O---');
+           expect(data[5]).to.equal('X-----O--');
+           expect(data[6]).to.equal('X------O-');
+           expect(data[7]).to.equal('X-------O');
+       });
+    });
     describe('generateLayouts', function() {
         it('should generate 8 layouts for X--------', function() {
             var layouts = ai.generateLayouts('X--------', new Player('O', 'human'));

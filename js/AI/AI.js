@@ -10,6 +10,7 @@ module.exports = function(game) {
     function rowcol(pos) {
         return [Math.floor(pos / 3), pos % 3];
     }
+
     function otherPlayer(currentPlayer) {
         if (currentPlayer.getPlayer() === 'X') return new Player('O', 'human');
         return new Player('X', 'human');
@@ -60,17 +61,23 @@ module.exports = function(game) {
         return choose([0, 2, 4, 6, 8]);
     }
 
-    function generateLayouts(layout, currentPlayer) {
+    function forallMoves(layout, currentPlayer, data, fn) {
         var valid = validMoves(layout);
-        var layouts = {};
         for(var move in valid) {
-            if (!valid.hasOwnProperty(move)) continue;
+            if(!valid.hasOwnProperty(move)) continue;
             var pos = valid[move];
             var board = new Board(layout);
-            board.SetSquare(currentPlayer, Math.floor(pos / 3), pos % 3);
-            layouts[pos] = board.getLayout();
+            board.SetSquare(currentPlayer, rowcol(pos)[0], rowcol(pos)[1]);
+            data = fn(board.getLayout(), currentPlayer, pos, data);
         }
-        return layouts;
+        return data;
+    }
+
+    function generateLayouts(layout, currentPlayer) {
+        return forallMoves(layout, currentPlayer, {}, function(lay, play, pos, data) {
+            data[pos] = lay;
+            return data;
+        });
     }
 
     function findWinner(layouts) {
@@ -89,62 +96,36 @@ module.exports = function(game) {
     }
 
     function mustBlock(layout, currentPlayer) {
-        var valid = validMoves(layout);
-        var blocks = [];
-        for (var move in valid) {
-            if (!valid.hasOwnProperty(move)) continue;
-            var pos = valid[move];
-            var rc = rowcol(pos);
-            var board = new Board(layout);
-            board.SetSquare(otherPlayer(currentPlayer), rc[0], rc[1]);
+        var blocks = forallMoves(layout, otherPlayer(currentPlayer), [], function(lay, play, pos, data) {
             var evaluator = new Evaluator();
-            var winner = evaluator.winner(board.getLayout());
-            if (winner.length > 0) {
-                blocks.push(pos);
+            if (evaluator.winner(lay).length > 0) {
+                return data.concat(pos);
             }
-        }
+            return data;
+        });
         return blocks.length == 0 ? null : blocks;
     }
 
-
     function multiBlockMoves(layout, currentPlayer) {
-        var valid = validMoves(layout);
-        var multiBlocks = [];
-        for (var move in valid) {
-            if (!valid.hasOwnProperty(move)) continue;
-            var pos = valid[move];
-            var rc = rowcol(pos);
-            var board = new Board(layout);
-            board.SetSquare(currentPlayer, rc[0], rc[1]);
-            var oppValid = validMoves(board.getLayout());
-            for(var oppMove in oppValid) {
-                if (!oppValid.hasOwnProperty(oppMove)) continue;
-                var oppPos = oppValid[oppMove];
-                var oppRC = rowcol(oppPos);
-                var oppBoard = new Board(board.getLayout());
-                oppBoard.SetSquare(otherPlayer(currentPlayer), oppRC[0], oppRC[1]);
-                var mustBlocks = mustBlock(oppBoard.getLayout(), currentPlayer);
+        var multiBlocks = forallMoves(layout, currentPlayer, [], function(lay, play, pos, data) {
+            data = forallMoves(lay, otherPlayer(play), data, function(lay2, play2, pos2, data2) {
+                var mustBlocks = mustBlock(lay2, play);
                 if (mustBlocks && mustBlocks.length > 1) {
-                    if(!findWinner(generateLayouts(oppBoard.getLayout(), currentPlayer))) {
-                        multiBlocks.push(pos);
+                    if (!findWinner(generateLayouts(lay2, play)) && data2.indexOf(pos) == -1) {
+                        return data2.concat(pos);
                     }
                 }
-            }
-        }
-        return multiBlocks.length == 0 ? null : multiBlocks;
+                return data2;
+            });
+            return data;
+        });
+        return !multiBlocks || multiBlocks.length == 0 ? null : multiBlocks;
     }
 
     function listNonMultiBlockMoves(layout, currentPlayer) {
         var valid = validMoves(layout);
         var multiBlocks = multiBlockMoves(layout, currentPlayer);
-        var nonMultiBlocks = [];
-        for (var move in valid) {
-            if (!valid.hasOwnProperty(move)) continue;
-            if (!multiBlocks || multiBlocks.indexOf(valid[move]) == -1) {
-                nonMultiBlocks.push(valid[move]);
-            }
-        }
-        return nonMultiBlocks;
+        return valid.filter(function(x) { return !multiBlocks || multiBlocks.indexOf(x) == -1; });
     }
 
     function selectBestMove(layout, currentPlayer) {
@@ -187,6 +168,7 @@ module.exports = function(game) {
         validMoves: validMoves,
         contains: contains,
         makeSecondMove: makeSecondMove,
+        forallMoves: forallMoves,
         generateLayouts: generateLayouts,
         findWinner: findWinner,
         mustBlock: mustBlock,
