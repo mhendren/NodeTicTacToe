@@ -70,14 +70,14 @@ describe ('AI', function() {
         });
     });
     describe('makeFirstMove', function() {
-        it('should always pick on of 0, 2, 4, 6, or 8 (expect 10000 of 10000 to match)', function () {
+        it('should always pick on of 0, 2, 4, 6, or 8 (expect 1000 of 1000 to match)', function () {
             var cnt = 0;
-            for(var i = 0; i < 10000; i++) {
+            for(var i = 0; i < 1000; i++) {
                 if([0, 2, 4, 6, 8].indexOf(ai.makeFirstMove()) != -1) {
                     cnt++;
                 }
             }
-            expect(cnt).to.equal(10000);
+            expect(cnt).to.equal(1000);
         });
     });
     describe('validMoves', function() {
@@ -106,34 +106,34 @@ describe ('AI', function() {
         });
     });
     describe('makeSecondMove', function() {
-        it('should always select a corner if the center is taken (expect 10000 out of 10000 matches)', function() {
+        it('should always select a corner if the center is taken (expect 1000 out of 1000 matches)', function() {
             var cnt = 0;
-            for(var i = 0; i < 10000; i++) {
+            for(var i = 0; i < 1000; i++) {
                 if([0, 2, 6, 8].indexOf(ai.makeSecondMove('----X----')) != -1) {
                     cnt++;
                 }
             }
-            expect(cnt).to.equal(10000);
+            expect(cnt).to.equal(1000);
         });
-        it('should always pick the center for any corner being taken (expect 40000 out of 40000 matches)', function() {
+        it('should always pick the center for any corner being taken (expect 1000 out of 1000 matches)', function() {
             var cnt = 0;
-            for(var i = 0; i < 10000; i++) {
+            for(var i = 0; i < 250; i++) {
                 if (ai.makeSecondMove('X--------') == 4) cnt++;
                 if (ai.makeSecondMove('--X------') == 4) cnt++;
                 if (ai.makeSecondMove('------X--') == 4) cnt++;
                 if (ai.makeSecondMove('--------X') == 4) cnt++;
             }
-            expect(cnt).to.equal(40000);
+            expect(cnt).to.equal(1000);
         });
-        it('should pick a corner or center if a side square was taken (expect 40000 out of 40000 matches)', function() {
+        it('should pick a corner or center if a side square was taken (expect 1000 out of 1000 matches)', function() {
             var cnt = 0;
-            for(var i = 0; i < 10000; i++) {
+            for(var i = 0; i < 250; i++) {
                 if ([0, 2, 4, 6, 8].indexOf(ai.makeSecondMove('-X-------')) != -1) cnt++;
                 if ([0, 2, 4, 6, 8].indexOf(ai.makeSecondMove('---X-----')) != -1) cnt++;
                 if ([0, 2, 4, 6, 8].indexOf(ai.makeSecondMove('-----X---')) != -1) cnt++;
                 if ([0, 2, 4, 6, 8].indexOf(ai.makeSecondMove('-------X-')) != -1) cnt++;
             }
-            expect(cnt).to.equal(40000);
+            expect(cnt).to.equal(1000);
         });
     });
     describe('forallMoves', function() {
@@ -218,5 +218,73 @@ describe ('AI', function() {
         it('should return [3, 5] for XXO-O-XOX for player O', function() {
             expect(ai.listNonMultiBlockMoves('XXO-O-XOX', new Player('O', 'human'))).to.deep.equal([3, 5]);
         });
-    })
+    });
+    describe('selectBestMove', function() {
+        it('should return a first move for an empty board (1000 out of 1000 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i < 1000; i++) {
+                if([0, 2, 4, 6, 8].indexOf(ai.selectBestMove('---------', new Player('X', 'human'))) != -1) {
+                    cnt++;
+                }
+            }
+            expect(cnt).to.equal(1000);
+        });
+        it('should return a second move in center or corner for any side mode (1000 out of 1000 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i < 250; i++) {
+                if ([0, 2, 4, 6, 8].indexOf(ai.selectBestMove('-X-------', new Player('O', 'human'))) != -1) cnt++;
+                if ([0, 2, 4, 6, 8].indexOf(ai.selectBestMove('---X-----', new Player('O', 'human'))) != -1) cnt++;
+                if ([0, 2, 4, 6, 8].indexOf(ai.selectBestMove('-----X---', new Player('O', 'human'))) != -1) cnt++;
+                if ([0, 2, 4, 6, 8].indexOf(ai.selectBestMove('-------X-', new Player('O', 'human'))) != -1) cnt++;
+            }
+            expect(cnt).to.equal(1000);
+        });
+        it('should return a corner move for a move in the center (1000 out of 1000 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i< 1000; i++) {
+                if ([0, 2, 6, 8].indexOf(ai.selectBestMove('----X----', new Player('O', 'human'))) != -1) cnt++;
+            }
+            expect(cnt).to.equal(1000);
+        });
+        it('should select the center second move for any corner selected (1000 out of 1000 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i < 250; i++) {
+                if (ai.selectBestMove('X--------', new Player('O', 'human')) == 4) cnt++;
+                if (ai.selectBestMove('--X------', new Player('O', 'human')) == 4) cnt++;
+                if (ai.selectBestMove('------X--', new Player('O', 'human')) == 4) cnt++;
+                if (ai.selectBestMove('--------X', new Player('O', 'human')) == 4) cnt++;
+            }
+            expect(cnt).to.equal(1000);
+        });
+        it('should always pick a winner when available (1000 out of 1000 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i < 250; i++) {
+                if (ai.selectBestMove('X-X-O---O', new Player('X', 'human')) == 1) cnt++;
+                if (ai.selectBestMove('X-OOX----', new Player('X', 'human')) == 8) cnt++;
+                if (ai.selectBestMove('XOXXO----', new Player('O', 'human')) == 7) cnt++;
+                if (ai.selectBestMove('OO-XX--X-', new Player('O', 'human')) == 2) cnt++;
+            }
+            expect(cnt).to.equal(1000);
+        });
+        it('should always pick a block if it must be taken (1000 out of 1000 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i < 250; i++) {
+                if (ai.selectBestMove('X-X-O----', new Player('O', 'human')) == 1) cnt++;
+                if (ai.selectBestMove('X--O----X', new Player('O', 'human')) == 4) cnt++;
+                if (ai.selectBestMove('XOX-O----', new Player('X', 'human')) == 7) cnt++;
+                if (ai.selectBestMove('OX-XO----', new Player('X', 'human')) == 8) cnt++;
+            }
+            expect(cnt).to.equal(1000);
+        });
+        it('should never select a position that would allow a multiBlock (1000 out of 1000 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i < 250; i++) {
+                if ([2, 6].indexOf(ai.selectBestMove('X---O---X', new Player('O', 'human'))) == -1) cnt++;
+                if ([0, 8].indexOf(ai.selectBestMove('--X-O-X--', new Player('O', 'human'))) == -1) cnt++;
+                if ([1, 3].indexOf(ai.selectBestMove('X---X---O', new Player('O', 'human'))) == -1) cnt++;
+                if ([5, 7].indexOf(ai.selectBestMove('--X-X-O--', new Player('O', 'human'))) == -1) cnt++;
+            }
+            expect(cnt).to.equal(1000);
+        });
+    });
 });
