@@ -1,6 +1,7 @@
 var Board = require("./Board.js");
 var Player = require("./Player.js");
 var Evaluator = require("./Evaluator.js");
+var AI = require('../AI/AI');
 
 module.exports = function() {
 
@@ -50,6 +51,9 @@ module.exports = function() {
             column = c;
             _switchPlayer();
             _makeStatus();
+            if(state == "inprogress" && currentPlayer.getPlayerType() == "computer") {
+                new AI(this).play(currentPlayer);
+            }
         } catch (err) {
             errorMessage = err.message;
         }
@@ -92,6 +96,7 @@ module.exports = function() {
     return {
         "PlaceMark": PlaceMark,
         "ChangePlayerType": ChangePlayerType,
+        "board": board,
 
         "toJSON": toJSON
     };

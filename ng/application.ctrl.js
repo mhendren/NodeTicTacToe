@@ -81,7 +81,7 @@ app.controller('ApplicationCtrl', function($scope, $http) {
         if (scope.playerO) {
             players.O = scope.playerO.toLowerCase();
         }
-        if (isEmpty(players)) {
+        if (!isEmpty(players)) {
             console.log('Setting up initial players: ' + JSON.stringify(players));
             http.put('/game', players)
                 .error(function (err) {
@@ -121,9 +121,11 @@ app.controller('ApplicationCtrl', function($scope, $http) {
     $scope.updatePlayer = function updatePlayer(player) {
         var playerType = player == 'X' ? $scope.playerX : $scope.playerO;
         console.log('updating player "' + player + '" to type "' + playerType + '"');
-        $http.put('/game', {player: playerType.toLowerCase()})
-            .success(function(data) {
-                updateState($scope, data);
+        var data = {};
+        data[player] = playerType.toLowerCase();
+        $http.put('/game', data)
+            .success(function(returnData) {
+                updateState($scope, returnData);
             })
             .error(function(err) {
                 $scope.message = err;
