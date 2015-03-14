@@ -69,6 +69,9 @@ module.exports = function() {
             } else {
                 errorMessage = "Invalid player";
             }
+            if (id == currentPlayer.getPlayer() && currentPlayer.getPlayerType() == "computer") {
+                new AI(this).play(currentPlayer);
+            }
         } catch (err) {
             errorMessage = err.message;
         }

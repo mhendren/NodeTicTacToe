@@ -84,6 +84,9 @@ app.controller('ApplicationCtrl', function($scope, $http) {
         if (!isEmpty(players)) {
             console.log('Setting up initial players: ' + JSON.stringify(players));
             http.put('/game', players)
+                .success(function(data) {
+                    updateState(scope, data);
+                })
                 .error(function (err) {
                     scope.message = err;
                 });
