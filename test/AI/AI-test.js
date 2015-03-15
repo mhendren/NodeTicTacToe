@@ -248,6 +248,14 @@ describe ('AI', function() {
             expect(ai.listNonMultiBlockMoves('XXO-O-XOX', new Player('O', 'human'))).to.deep.equal([3, 5]);
         });
     });
+    describe('multiWinMove', function() {
+        it('should find a multiWin position at 8 for -OX-X-O--', function() {
+            expect(ai.mutilWinMove('-OX-X-O--', new Player('X', 'human'))).to.deep.equal([8]);
+        });
+        it('should find a multiWin position at 4 for XXO--O--X', function() {
+            expect(ai.multiWinMove('XXO--O--X', new Player('O', 'human'))).to.deep.equal([4]);
+        });
+    });
     describe('selectBestMove', function() {
         it('should return a first move for an empty board (1000 out of 1000 tries)', function() {
             var cnt = 0;
