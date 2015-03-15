@@ -61,6 +61,16 @@ module.exports = function(game) {
         return choose([0, 2, 4, 6, 8]);
     }
 
+    function hasIdiotBall(layout, currentPlayer) {
+        // The idiot ball means that the O player has played a size square, and the X player has played proper.
+        // If the X player played a corner or center first, and the O player played a side second, you can
+        // ALWAYS force them into a doubleBlock.
+        return currentPlayer.getPlayer() == 'X' &&
+            layout.indexOf('X') % 2 == 0 &&
+            layout.indexOf('O') % 2 == 1 &&
+            layout.match(/-/g, []).length == 7;
+    }
+
     function forallMoves(layout, currentPlayer, data, fn) {
         var valid = validMoves(layout);
         for(var move in valid) {
@@ -168,6 +178,7 @@ module.exports = function(game) {
         validMoves: validMoves,
         contains: contains,
         makeSecondMove: makeSecondMove,
+        hasIdiotBall: hasIdiotBall,
         forallMoves: forallMoves,
         generateLayouts: generateLayouts,
         findWinner: findWinner,

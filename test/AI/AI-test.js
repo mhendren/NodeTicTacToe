@@ -136,6 +136,35 @@ describe ('AI', function() {
             expect(cnt).to.equal(1000);
         });
     });
+    describe('hasIdiotBall', function() {
+        it('should find the idiot ball if the "O" player has played a side square for the second move', function() {
+            expect(ai.hasIdiotBall('XO-------', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('X--O-----', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('X----O---', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('X------O-', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-OX------', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('--XO-----', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('--X--O---', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('--X----O-', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-O--X----', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('---OX----', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('----XO---', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('----X--O-', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-O----X--', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('---O--X--', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-----OX--', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('------XO-', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-O------X', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('---O----X', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-----O--X', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-------OX', new Player('X', 'human'))).to.be.true;
+            // just verify one position that corners/center are not idiot balls
+            expect(ai.hasIdiotBall('X-O------', new Player('X', 'human'))).to.be.false;
+            expect(ai.hasIdiotBall('X---O----', new Player('X', 'human'))).to.be.false;
+            expect(ai.hasIdiotBall('X-----O--', new Player('X', 'human'))).to.be.false;
+            expect(ai.hasIdiotBall('X-------O', new Player('X', 'human'))).to.be.false;
+        });
+    });
     describe('forallMoves', function() {
        it('should add a copy of each layout into an array', function() {
            var data = ai.forallMoves('X--------', new Player('O', 'human'), [], function(lay, play, pos, data) {
