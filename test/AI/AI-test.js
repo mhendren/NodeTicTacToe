@@ -250,11 +250,17 @@ describe ('AI', function() {
     });
     describe('multiWinMove', function() {
         it('should find a multiWin position at 8 for -OX-X-O--', function() {
-            expect(ai.mutilWinMove('-OX-X-O--', new Player('X', 'human'))).to.deep.equal([8]);
+            expect(ai.multiWinMoves('-OX-X-O--', new Player('X', 'human'))).to.deep.equal([5, 8]);
         });
         it('should find a multiWin position at 4 for XXO--O--X', function() {
-            expect(ai.multiWinMove('XXO--O--X', new Player('O', 'human'))).to.deep.equal([4]);
+            expect(ai.multiWinMoves('XXO--O--X', new Player('O', 'human'))).to.deep.equal([4]);
         });
+        it('should find a multiWin position at 3 for X-O-X---O (though it will lose, because O will win first)', function() {
+            expect(ai.multiWinMoves('X-O-X---O', new Player('X', 'human'))).to.deep.equal([3]);
+        });
+        it('should not find a multiWin position for X---O-OX-', function() {
+            expect(ai.multiWinMoves('X---O-OX-', new Player('X', 'human'))).to.be.null;
+        })
     });
     describe('selectBestMove', function() {
         it('should return a first move for an empty board (1000 out of 1000 tries)', function() {

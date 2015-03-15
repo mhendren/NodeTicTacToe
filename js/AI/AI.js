@@ -138,6 +138,23 @@ module.exports = function(game) {
         return valid.filter(function(x) { return !multiBlocks || multiBlocks.indexOf(x) == -1; });
     }
 
+    function multiWinMoves(layout, currentPlayer) {
+        var multiWins = forallMoves(layout, currentPlayer, [], function(lay, play, pos, data) {
+            var winList = forallMoves(lay, play, [], function(lay2, play2, pos2, data2) {
+                var evaluator = new Evaluator();
+                if(evaluator.winner(lay2).length > 0 && data2.indexOf(pos2) == -1) {
+                    return data2.concat(pos2)
+                }
+                return data2;
+            });
+            if (winList.length > 1) {
+                return data.concat(pos);
+            }
+            return data;
+        });
+        return multiWins.length == 0 ? null : multiWins;
+    }
+
     function selectBestMove(layout, currentPlayer) {
         if (isEmpty(layout)) {
             return makeFirstMove();
@@ -188,6 +205,7 @@ module.exports = function(game) {
         mustBlock: mustBlock,
         multiBlockMoves: multiBlockMoves,
         listNonMultiBlockMoves: listNonMultiBlockMoves,
+        multiWinMoves: multiWinMoves,
         selectBestMove: selectBestMove,
 
 
