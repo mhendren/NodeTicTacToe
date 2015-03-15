@@ -320,12 +320,20 @@ describe ('AI', function() {
             expect(cnt).to.equal(1000);
         });
         it('should always pick an appropriate place if idiot ball is in play (1000 out of 1000 tries)', function() {
-           var cnt = 0;
+            var cnt = 0;
             for(var i = 0; i < 250; i++) {
                 if (ai.selectBestMove('XO-------', new Player('X', 'human')) == 4) cnt++;
                 if (ai.selectBestMove('---O----X', new Player('X', 'human')) == 4) cnt++;
                 if (ai.selectBestMove('--X----O-', new Player('X', 'human')) == 4) cnt++;
                 if ([0, 2, 6, 8].indexOf(ai.selectBestMove('----XO---', new Player('X', 'human'))) != -1) cnt++;
+            }
+            expect(cnt).to.equal(1000);
+        });
+        it('should always pick a multiWin spot if available (1000 out of 1000 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i < 500; i++) {
+                if ([5, 8].indexOf(ai.selectBestMove('-OX-X-O--', new Player('X', 'human'))) != -1) cnt++;
+                if (ai.selectBestMove('XXO--O--X', new Player('O', 'human')) == 4) cnt++;
             }
             expect(cnt).to.equal(1000);
         });

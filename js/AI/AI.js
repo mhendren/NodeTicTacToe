@@ -174,6 +174,10 @@ module.exports = function(game) {
         if (must != null) {
             return must;
         }
+        var multiWin = multiWinMoves(layout, currentPlayer);
+        if (multiWin != null) {
+            return choose(multiWin);
+        }
         var nonMultiBlocks = listNonMultiBlockMoves(layout, currentPlayer);
         if (nonMultiBlocks.length > 0) {
             return choose(nonMultiBlocks);
