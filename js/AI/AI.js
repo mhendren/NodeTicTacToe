@@ -150,6 +150,9 @@ module.exports = function(game) {
         if (winner != null) {
             return winner;
         }
+        if(hasIdiotBall(layout, currentPlayer)) {
+            return makeSecondMove(layout);
+        }
         var must = mustBlock(layout, currentPlayer);
         if (must != null) {
             return must;
