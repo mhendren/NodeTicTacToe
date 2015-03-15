@@ -61,6 +61,16 @@ module.exports = function(game) {
         return choose([0, 2, 4, 6, 8]);
     }
 
+    function hasIdiotBall(layout, currentPlayer) {
+        // The idiot ball means that the O player has played a size square, and the X player has played proper.
+        // If the X player played a corner or center first, and the O player played a side second, you can
+        // ALWAYS force them into a doubleBlock.
+        return currentPlayer.getPlayer() == 'X' &&
+            layout.indexOf('X') % 2 == 0 &&
+            layout.indexOf('O') % 2 == 1 &&
+            layout.match(/-/g, []).length == 7;
+    }
+
     function forallMoves(layout, currentPlayer, data, fn) {
         var valid = validMoves(layout);
         for(var move in valid) {
@@ -128,6 +138,23 @@ module.exports = function(game) {
         return valid.filter(function(x) { return !multiBlocks || multiBlocks.indexOf(x) == -1; });
     }
 
+    function multiWinMoves(layout, currentPlayer) {
+        var multiWins = forallMoves(layout, currentPlayer, [], function(lay, play, pos, data) {
+            var winList = forallMoves(lay, play, [], function(lay2, play2, pos2, data2) {
+                var evaluator = new Evaluator();
+                if(evaluator.winner(lay2).length > 0 && data2.indexOf(pos2) == -1) {
+                    return data2.concat(pos2)
+                }
+                return data2;
+            });
+            if (winList.length > 1) {
+                return data.concat(pos);
+            }
+            return data;
+        });
+        return multiWins.length == 0 ? null : multiWins;
+    }
+
     function selectBestMove(layout, currentPlayer) {
         if (isEmpty(layout)) {
             return makeFirstMove();
@@ -140,9 +167,16 @@ module.exports = function(game) {
         if (winner != null) {
             return winner;
         }
+        if(hasIdiotBall(layout, currentPlayer)) {
+            return makeSecondMove(layout);
+        }
         var must = mustBlock(layout, currentPlayer);
         if (must != null) {
             return must;
+        }
+        var multiWin = multiWinMoves(layout, currentPlayer);
+        if (multiWin != null) {
+            return choose(multiWin);
         }
         var nonMultiBlocks = listNonMultiBlockMoves(layout, currentPlayer);
         if (nonMultiBlocks.length > 0) {
@@ -168,12 +202,14 @@ module.exports = function(game) {
         validMoves: validMoves,
         contains: contains,
         makeSecondMove: makeSecondMove,
+        hasIdiotBall: hasIdiotBall,
         forallMoves: forallMoves,
         generateLayouts: generateLayouts,
         findWinner: findWinner,
         mustBlock: mustBlock,
         multiBlockMoves: multiBlockMoves,
         listNonMultiBlockMoves: listNonMultiBlockMoves,
+        multiWinMoves: multiWinMoves,
         selectBestMove: selectBestMove,
 
 

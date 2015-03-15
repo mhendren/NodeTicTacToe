@@ -136,6 +136,35 @@ describe ('AI', function() {
             expect(cnt).to.equal(1000);
         });
     });
+    describe('hasIdiotBall', function() {
+        it('should find the idiot ball if the "O" player has played a side square for the second move', function() {
+            expect(ai.hasIdiotBall('XO-------', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('X--O-----', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('X----O---', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('X------O-', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-OX------', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('--XO-----', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('--X--O---', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('--X----O-', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-O--X----', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('---OX----', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('----XO---', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('----X--O-', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-O----X--', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('---O--X--', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-----OX--', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('------XO-', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-O------X', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('---O----X', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-----O--X', new Player('X', 'human'))).to.be.true;
+            expect(ai.hasIdiotBall('-------OX', new Player('X', 'human'))).to.be.true;
+            // just verify one position that corners/center are not idiot balls
+            expect(ai.hasIdiotBall('X-O------', new Player('X', 'human'))).to.be.false;
+            expect(ai.hasIdiotBall('X---O----', new Player('X', 'human'))).to.be.false;
+            expect(ai.hasIdiotBall('X-----O--', new Player('X', 'human'))).to.be.false;
+            expect(ai.hasIdiotBall('X-------O', new Player('X', 'human'))).to.be.false;
+        });
+    });
     describe('forallMoves', function() {
        it('should add a copy of each layout into an array', function() {
            var data = ai.forallMoves('X--------', new Player('O', 'human'), [], function(lay, play, pos, data) {
@@ -219,6 +248,20 @@ describe ('AI', function() {
             expect(ai.listNonMultiBlockMoves('XXO-O-XOX', new Player('O', 'human'))).to.deep.equal([3, 5]);
         });
     });
+    describe('multiWinMove', function() {
+        it('should find a multiWin position at 8 for -OX-X-O--', function() {
+            expect(ai.multiWinMoves('-OX-X-O--', new Player('X', 'human'))).to.deep.equal([5, 8]);
+        });
+        it('should find a multiWin position at 4 for XXO--O--X', function() {
+            expect(ai.multiWinMoves('XXO--O--X', new Player('O', 'human'))).to.deep.equal([4]);
+        });
+        it('should find a multiWin position at 3 for X-O-X---O (though it will lose, because O will win first)', function() {
+            expect(ai.multiWinMoves('X-O-X---O', new Player('X', 'human'))).to.deep.equal([3]);
+        });
+        it('should not find a multiWin position for X---O-OX-', function() {
+            expect(ai.multiWinMoves('X---O-OX-', new Player('X', 'human'))).to.be.null;
+        })
+    });
     describe('selectBestMove', function() {
         it('should return a first move for an empty board (1000 out of 1000 tries)', function() {
             var cnt = 0;
@@ -273,6 +316,24 @@ describe ('AI', function() {
                 if (ai.selectBestMove('X--O----X', new Player('O', 'human')) == 4) cnt++;
                 if (ai.selectBestMove('XOX-O----', new Player('X', 'human')) == 7) cnt++;
                 if (ai.selectBestMove('OX-XO----', new Player('X', 'human')) == 8) cnt++;
+            }
+            expect(cnt).to.equal(1000);
+        });
+        it('should always pick an appropriate place if idiot ball is in play (1000 out of 1000 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i < 250; i++) {
+                if (ai.selectBestMove('XO-------', new Player('X', 'human')) == 4) cnt++;
+                if (ai.selectBestMove('---O----X', new Player('X', 'human')) == 4) cnt++;
+                if (ai.selectBestMove('--X----O-', new Player('X', 'human')) == 4) cnt++;
+                if ([0, 2, 6, 8].indexOf(ai.selectBestMove('----XO---', new Player('X', 'human'))) != -1) cnt++;
+            }
+            expect(cnt).to.equal(1000);
+        });
+        it('should always pick a multiWin spot if available (1000 out of 1000 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i < 500; i++) {
+                if ([5, 8].indexOf(ai.selectBestMove('-OX-X-O--', new Player('X', 'human'))) != -1) cnt++;
+                if (ai.selectBestMove('XXO--O--X', new Player('O', 'human')) == 4) cnt++;
             }
             expect(cnt).to.equal(1000);
         });
