@@ -347,5 +347,15 @@ describe ('AI', function() {
             }
             expect(cnt).to.equal(1000);
         });
+        it('should never pick a move that would set up a possible win by second player (400 out of 400 tries)', function() {
+            var cnt = 0;
+            for(var i = 0; i < 100; i++) {
+                if ([5, 7].indexOf(ai.selectBestMove('X-------O', new Player('X', 'human'))) == -1) cnt++;
+                if ([3, 7].indexOf(ai.selectBestMove('--X---O--', new Player('X', 'human'))) == -1) cnt++;
+                if ([1, 5].indexOf(ai.selectBestMove('--O---X--', new Player('X', 'human'))) == -1) cnt++;
+                if ([1, 3].indexOf(ai.selectBestMove('O-------X', new Player('X', 'human'))) == -1) cnt++;
+            }
+            expect(cnt).to.equal(400);
+        });
     });
 });

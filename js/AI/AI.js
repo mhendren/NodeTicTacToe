@@ -180,6 +180,7 @@ module.exports = function(game) {
         }
         var nonMultiBlocks = listNonMultiBlockMoves(layout, currentPlayer);
         if (nonMultiBlocks.length > 0) {
+            if (nonMultiBlocks.indexOf(4) != -1) return 4;
             return choose(nonMultiBlocks);
         }
         // uh oh, something went wrong, and there are no moves that can't be setup for wins in more than one
